@@ -92,8 +92,18 @@ class _LoginScreenState extends State<LoginScreen> {
             width: double.infinity,
             child: RawMaterialButton(
               fillColor: Color(0xFF0069FE),
+              elevation: 0.0,
+              padding: EdgeInsets.symmetric(vertical: 20.0),
+
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12.0)
+                ),
               onPressed: (){}, 
-              child: Text("Login"),
+              child: Text("Login", style: TextStyle(
+                color: Colors.white,
+                fontSize: 20.0
+              ),
+              ),
 
             ),
           ),
