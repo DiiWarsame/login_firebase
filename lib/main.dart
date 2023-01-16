@@ -38,6 +38,8 @@ class LoginScreen extends StatefulWidget {
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
+
+
 class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
@@ -46,8 +48,55 @@ class _LoginScreenState extends State<LoginScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('MyApp Title'),
+        children:  [
+           const Text('MyApp Title', style: TextStyle(
+            color: Colors.black,
+            fontSize: 28.0,
+            fontWeight: FontWeight.bold,
+          ),
+          ),
+         const Text('Login Your App',style: TextStyle(
+            color: Colors.black,
+            fontSize: 44.0,
+            fontWeight: FontWeight.bold
+          ),
+          ),
+         const SizedBox(height: 44.0),
+         const TextField(
+            keyboardType: TextInputType.emailAddress,
+            decoration:  InputDecoration(
+              hintText: "User Email",
+              prefixIcon: Icon(Icons.mail,
+              color: Colors.black,
+               ),
+
+            ),
+          ),
+           const SizedBox(height: 26.0,),
+           const TextField(
+            obscureText: true,
+            decoration:  InputDecoration(
+              hintText: "Password",
+              prefixIcon: Icon(Icons.lock_open,
+              color: Colors.black,
+               ),
+            ),
+          ),
+         const  SizedBox(height: 8.0,),
+        const   Text('Dont remember ur password?', style: TextStyle(
+            color: Colors.blue,
+          ),
+          ),
+         const  SizedBox(height: 88.0,),
+          Container(
+            width: double.infinity,
+            child: RawMaterialButton(
+              fillColor: Color(0xFF0069FE),
+              onPressed: (){}, 
+              child: Text("Login"),
+
+            ),
+          ),
         ],
       ),
       );
