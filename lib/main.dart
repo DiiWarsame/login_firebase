@@ -1,3 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -16,6 +18,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -24,13 +27,34 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
+  //initialize firebase
+  Future<FirebaseApp> _initializeFirebase() async{
+    FirebaseApp firebaseApp = await Firebase.initializeApp();
+    return firebaseApp;
+     
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: LoginScreen(),
+      body: FutureBuilder(
+        future: _initializeFirebase(),
+        builder:  (context, snapshot) {
+          if(snapshot.connectionState == ConnectionState.done ){
+            return LoginScreen();
+          }
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        },
+      ),
     );
   }
 }
+
+
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -41,8 +65,30 @@ class LoginScreen extends StatefulWidget {
 
 
 class _LoginScreenState extends State<LoginScreen> {
+
+  //login func
+  static Future<User?> LoginUsingEmailPassword ({required String email , required String password, required BuildContext context}) async{
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User? user;
+    try{
+      UserCredential userCredential = await auth.signInWithEmailAndPassword(email: email, password: password);
+      user = userCredential.user;
+    } on FirebaseAuthException catch (e){
+      if(e.code == "user-not-found"){
+        print('no User found for that mail');
+      }
+    }
+    return user;
+  }
+
   @override
   Widget build(BuildContext context) {
+
+    //textfild controler
+    TextEditingController _emailController = TextEditingController();
+    TextEditingController _passwordController = TextEditingController();
+
+
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
@@ -62,9 +108,10 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
           ),
          const SizedBox(height: 44.0),
-         const TextField(
+          TextField(
+          controller: _emailController,
             keyboardType: TextInputType.emailAddress,
-            decoration:  InputDecoration(
+            decoration:  const InputDecoration(
               hintText: "User Email",
               prefixIcon: Icon(Icons.mail,
               color: Colors.black,
@@ -73,9 +120,10 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           ),
            const SizedBox(height: 26.0,),
-           const TextField(
+            TextField(
+            controller: _passwordController,
             obscureText: true,
-            decoration:  InputDecoration(
+            decoration: const  InputDecoration(
               hintText: "Password",
               prefixIcon: Icon(Icons.lock_open,
               color: Colors.black,
@@ -91,15 +139,22 @@ class _LoginScreenState extends State<LoginScreen> {
           Container(
             width: double.infinity,
             child: RawMaterialButton(
-              fillColor: Color(0xFF0069FE),
+              fillColor:const  Color(0xFF0069FE),
               elevation: 0.0,
-              padding: EdgeInsets.symmetric(vertical: 20.0),
+              padding: const EdgeInsets.symmetric(vertical: 20.0),
 
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12.0)
                 ),
-              onPressed: (){}, 
-              child: Text("Login", style: TextStyle(
+              onPressed: () async{
+                //testing 
+                User? user = await LoginUsingEmailPassword(email: _emailController.text, password: _passwordController.text, context: context);
+                print(user);
+                // if(user != null){
+                //   Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) ProfileScreen() => ))
+                // }
+              }, 
+              child: const Text("Login", style: TextStyle(
                 color: Colors.white,
                 fontSize: 20.0
               ),
