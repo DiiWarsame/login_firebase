@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:login_firebase/profile_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -150,9 +151,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 //testing 
                 User? user = await LoginUsingEmailPassword(email: _emailController.text, password: _passwordController.text, context: context);
                 print(user);
-                // if(user != null){
-                //   Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) ProfileScreen() => ))
-                // }
+                if(user != null){
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)  => ProfileScreen() ));
+                }
               }, 
               child: const Text("Login", style: TextStyle(
                 color: Colors.white,
